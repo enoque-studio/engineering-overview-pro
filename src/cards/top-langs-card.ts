@@ -28,20 +28,25 @@ export function renderTopLangsCard(
   const BAR_WIDTH = 445;
   const BAR_X = 25;
   const BAR_Y = CARD_PADDING_TOP;
+  const BAR_HEIGHT = 10;
+  const SEGMENT_GAP = 4;
 
   // Random ID for clipPath to avoid conflicts between multiple cards on the same page
   const maskId = `clip-langs-${Math.random().toString(36).slice(2, 8)}`;
 
-  let currentX = BAR_X;
   const totalPercentage = langs.reduce((sum, lang) => sum + lang.percentage, 0);
+  const totalGap = langs.length > 1 ? (langs.length - 1) * SEGMENT_GAP : 0;
+  const availableWidth = BAR_WIDTH - totalGap;
 
+  let currentX = BAR_X;
   const progressBars = langs
     .map((lang) => {
       // Scale width so the sum of displayed languages fills 100% of the available bar width
       const fraction = totalPercentage > 0 ? lang.percentage / totalPercentage : 0;
-      const width = BAR_WIDTH * fraction;
-      const rect = `<rect x="${String(currentX)}" y="${String(BAR_Y)}" width="${String(width)}" height="12" fill="${lang.color}" />`;
-      currentX += width;
+      const width = availableWidth * fraction;
+      const radius = Math.min(BAR_HEIGHT / 2, width / 2);
+      const rect = `<rect x="${String(currentX)}" y="${String(BAR_Y)}" rx="${String(radius)}" ry="${String(radius)}" width="${String(width)}" height="${String(BAR_HEIGHT)}" fill="${lang.color}" />`;
+      currentX += width + SEGMENT_GAP;
       return rect;
     })
     .join('');
@@ -51,18 +56,16 @@ export function renderTopLangsCard(
     : `
       <defs>
         <clipPath id="${maskId}">
-          <rect x="${String(BAR_X)}" y="${String(BAR_Y)}" rx="6" ry="6" width="${disableAnimations ? String(BAR_WIDTH) : '0'}" height="12">
+          <rect x="${String(BAR_X)}" y="${String(BAR_Y - 2)}" width="${disableAnimations ? String(BAR_WIDTH) : '0'}" height="${String(BAR_HEIGHT + 4)}">
             ${
               disableAnimations
                 ? ''
-                : `<animate attributeName="width" from="0" to="${String(BAR_WIDTH)}" dur="1s" fill="freeze" calcMode="spline" keyTimes="0; 1" keySplines="0.25 0.1 0.25 1" />`
+                : `<animate attributeName="width" from="0" to="${String(BAR_WIDTH)}" dur="1.2s" fill="freeze" calcMode="spline" keyTimes="0; 1" keySplines="0.16 1 0.3 1" />`
             }
           </rect>
         </clipPath>
       </defs>
-      <!-- Background of the bar -->
-      <rect x="${String(BAR_X)}" y="${String(BAR_Y)}" rx="6" ry="6" width="${String(BAR_WIDTH)}" height="12" fill="${theme.surface}" />
-      <!-- Sliced segments -->
+      <!-- Segmented language bar -->
       <g clip-path="url(#${maskId})">
         ${progressBars}
       </g>
@@ -87,24 +90,27 @@ export function renderTopLangsCard(
       return `
       <g transform="translate(${String(x)}, ${String(y)})">
         <g class="stagger" style="${staggerStyle}">
-          <!-- Language Color Dot -->
-          <circle cx="5" cy="0" r="5" fill="${lang.color}" />
-          
+          <!-- Language Color Dot with halo -->
+          <circle cx="5" cy="0" r="8" fill="${lang.color}" fill-opacity="0.15" />
+          <circle cx="5" cy="0" r="4" fill="${lang.color}" />
+
           <!-- Language Name -->
-          <text x="20" y="0"
+          <text x="21" y="0"
             dominant-baseline="central"
             fill="${theme.text}"
-            font-size="14" font-weight="600"
+            font-size="13.5" font-weight="500"
+            letter-spacing="0.2"
             font-family="${FONT_FAMILY}">
             ${escapeXml(lang.name)}
           </text>
-          
+
           <!-- Language Percentage -->
           <text x="180" y="0"
             dominant-baseline="central"
             text-anchor="end"
             fill="${theme.muted}"
-            font-size="13" font-weight="400"
+            font-size="12.5" font-weight="600"
+            style="font-variant-numeric: tabular-nums;"
             font-family="${FONT_FAMILY}">
             ${String(lang.percentage)}%
           </text>

@@ -159,6 +159,9 @@ function renderScorePanel({ data, theme, disabled }: ScorePanelParams): string {
         <stop offset="0%"   stop-color="${arcColor}" stop-opacity="1" />
         <stop offset="100%" stop-color="${arcColor}" stop-opacity="0.4" />
       </linearGradient>
+      <filter id="dv-arc-glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="4" />
+      </filter>
     </defs>
 
     <!-- track ring -->
@@ -167,6 +170,19 @@ function renderScorePanel({ data, theme, disabled }: ScorePanelParams): string {
       stroke="${theme.border}"
       stroke-width="${String(STROKE_W)}"
       stroke-opacity="0.2" />
+
+    <!-- glow behind progress arc -->
+    <circle class="dv-arc"
+      cx="${String(CX)}" cy="${String(CY)}" r="${String(RADIUS)}"
+      fill="none"
+      stroke="${arcColor}"
+      stroke-opacity="0.4"
+      stroke-width="${String(STROKE_W)}"
+      stroke-linecap="round"
+      stroke-dasharray="${String(CIRCUMFERENCE)}"
+      style="${animStyle}"
+      transform="rotate(-90 ${String(CX)} ${String(CY)})"
+      filter="url(#dv-arc-glow)" />
 
     <!-- progress arc -->
     <circle class="dv-arc"
@@ -182,7 +198,8 @@ function renderScorePanel({ data, theme, disabled }: ScorePanelParams): string {
     <!-- grade letter -->
     <text x="${String(CX)}" y="${String(CY - 9)}"
       text-anchor="middle" dominant-baseline="central"
-      font-family="${FONT_FAMILY}" font-size="42" font-weight="400"
+      font-family="${FONT_FAMILY}" font-size="40" font-weight="600"
+      letter-spacing="-1"
       fill="${arcColor}">
       ${escapeXml(normalizedGrade)}
     </text>
@@ -215,8 +232,6 @@ export function renderDevOpsCard(data: DevOpsData, options: CardOptions): string
   const BOTTOM_PAD = 24;
 
   const LEFT_PAD = 24;
-  const ACCENT_W = 2;
-  const ICON_OFFSET = 14;
   const TEXT_X = 40;
   const SEP_RIGHT = 288;
 
@@ -232,6 +247,7 @@ export function renderDevOpsCard(data: DevOpsData, options: CardOptions): string
   const scoreTopY = BODY_PAD_TOP + Math.round((listHeight - SCORE_BLOCK_HEIGHT) / 2);
 
   // ── Stat rows ─────────────────────────────────────────────────────
+  const BAR_WIDTH = SEP_RIGHT - TEXT_X; // 248
   const statRows = items
     .map((item, index) => {
       const rowY = BODY_PAD_TOP + index * ROW_HEIGHT;
@@ -245,31 +261,45 @@ export function renderDevOpsCard(data: DevOpsData, options: CardOptions): string
            stroke="${theme.border}" stroke-width="1" stroke-opacity="0.18" />`
           : '';
 
+      const progress = getGradeProgress(item.grade);
+      const fillWidth = (progress / 100) * BAR_WIDTH;
+      const barY = midY + 22;
+      const barAnim = disableAnimations
+        ? ''
+        : `<animate attributeName="width" from="0" to="${String(fillWidth)}" begin="${String(delay + 200)}ms" dur="1s" fill="freeze" calcMode="spline" keyTimes="0; 1" keySplines="0.16 1 0.3 1" />`;
+
       return `
     <g transform="translate(${String(LEFT_PAD)}, ${String(rowY)})">
       <g class="stagger" style="${staggerStyle}">
         ${separator}
 
-        <!-- accent bar -->
-        <rect x="0" y="${String(midY - 14)}" width="${String(ACCENT_W)}" height="28" rx="1"
-          fill="${item.iconColor}" fill-opacity="0.6" />
-
-        <!-- icon -->
-        <g transform="translate(${String(ICON_OFFSET)}, ${String(midY - 8)})">
+        <!-- icon chip -->
+        <rect x="0" y="${String(midY - 20)}" width="24" height="24" rx="7"
+          fill="${item.iconColor}" fill-opacity="0.08"
+          stroke="${item.iconColor}" stroke-opacity="0.16" stroke-width="1" />
+        <g transform="translate(4, ${String(midY - 16)})">
           ${item.icon}
         </g>
 
         <!-- label -->
-        <text x="${String(TEXT_X)}" y="${String(midY - 12)}"
+        <text x="${String(TEXT_X)}" y="${String(midY - 14)}"
           class="dv-label" dominant-baseline="central" fill="${theme.title}">
           ${escapeXml(item.label)}
         </text>
 
         <!-- metrics -->
-        <text x="${String(TEXT_X)}" y="${String(midY + 11)}"
+        <text x="${String(TEXT_X)}" y="${String(midY + 7)}"
           class="dv-value" dominant-baseline="central" fill="${theme.text}">
           ${escapeXml(item.value)}
         </text>
+
+        <!-- grade progress bar -->
+        <rect x="${String(TEXT_X)}" y="${String(barY)}" width="${String(BAR_WIDTH)}" height="3" rx="1.5"
+          fill="${theme.border}" fill-opacity="0.25" />
+        <rect x="${String(TEXT_X)}" y="${String(barY)}" width="${disableAnimations ? String(fillWidth) : '0'}" height="3" rx="1.5"
+          fill="${item.iconColor}" fill-opacity="0.9">
+          ${barAnim}
+        </rect>
       </g>
     </g>`;
     })

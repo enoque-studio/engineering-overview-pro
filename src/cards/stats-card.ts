@@ -74,54 +74,76 @@ function renderRankCircle(
   theme: CardOptions['theme'],
   disabled: boolean,
 ): string {
-  const CIRCLE_RADIUS = 56;
+  const CIRCLE_RADIUS = 54;
   const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
   const progress = ((100 - rank.percentile) / 100) * CIRCLE_CIRCUMFERENCE;
+  const finalOffset = CIRCLE_CIRCUMFERENCE - progress;
 
   const animationStyle = disabled
-    ? `opacity: 1; stroke-dashoffset: ${String(CIRCLE_CIRCUMFERENCE - progress)};`
-    : `animation: rankAnimation 1s ease-in-out forwards; stroke-dashoffset: ${String(CIRCLE_CIRCUMFERENCE)};`;
+    ? `opacity: 1; stroke-dashoffset: ${String(finalOffset)};`
+    : `animation: rankAnimation 1.2s cubic-bezier(0.16, 1, 0.3, 1) 250ms forwards; stroke-dashoffset: ${String(CIRCLE_CIRCUMFERENCE)};`;
 
   const animationKeyframes = disabled
     ? ''
     : `
     @keyframes rankAnimation {
-      to { stroke-dashoffset: ${String(CIRCLE_CIRCUMFERENCE - progress)}; }
+      to { stroke-dashoffset: ${String(finalOffset)}; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rank-arc { animation: none !important; stroke-dashoffset: ${String(finalOffset)} !important; }
     }`;
 
   return `
     <g transform="translate(0, 0)">
       <style>${animationKeyframes}</style>
+      <defs>
+        <linearGradient id="rank-arc-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="${theme.icon}" />
+          <stop offset="100%" stop-color="${theme.purple}" />
+        </linearGradient>
+        <filter id="rank-glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+        </filter>
+      </defs>
       <circle cx="0" cy="0" r="${String(CIRCLE_RADIUS)}"
         fill="none"
-        stroke="${theme.surface}"
-        stroke-width="8"
-        stroke-opacity="0.5" />
-      <circle cx="0" cy="0" r="${String(CIRCLE_RADIUS)}"
+        stroke="${theme.border}"
+        stroke-width="7"
+        stroke-opacity="0.35" />
+      <circle class="rank-arc" cx="0" cy="0" r="${String(CIRCLE_RADIUS)}"
         fill="none"
         stroke="${theme.rankCircle}"
-        stroke-width="6"
+        stroke-width="7"
+        stroke-opacity="0.4"
         stroke-linecap="round"
         stroke-dasharray="${String(CIRCLE_CIRCUMFERENCE)}"
         style="${animationStyle}"
         transform="rotate(-90)"
-        filter="url(#shadow)" />
-      <text x="0" y="-8"
+        filter="url(#rank-glow)" />
+      <circle class="rank-arc" cx="0" cy="0" r="${String(CIRCLE_RADIUS)}"
+        fill="none"
+        stroke="url(#rank-arc-grad)"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-dasharray="${String(CIRCLE_CIRCUMFERENCE)}"
+        style="${animationStyle}"
+        transform="rotate(-90)" />
+      <text x="0" y="-7"
         text-anchor="middle"
         dominant-baseline="central"
         fill="${theme.title}"
-        font-size="38" font-weight="800"
-        filter="url(#shadow)"
+        font-size="36" font-weight="800"
+        letter-spacing="-0.5"
         font-family="${FONT_FAMILY}">
         ${escapeXml(rank.level)}
       </text>
-      <text x="0" y="24"
+      <text x="0" y="22"
+        class="micro-label"
         text-anchor="middle"
         dominant-baseline="central"
         fill="${theme.muted}"
-        font-size="14" font-weight="500"
         font-family="${FONT_FAMILY}">
-        Top ${String(rank.percentile)}%
+        TOP ${String(rank.percentile)}%
       </text>
     </g>`;
 }
@@ -142,29 +164,32 @@ export function renderStatsCard(stats: UserStats, options: StatsCardOptions): st
   const RANK_CIRCLE_Y =
     CARD_PADDING_TOP + ((items.length > 0 ? items.length - 1 : 0) * lineHeight) / 2;
 
-  // Render stat rows
+  // Render stat rows — icon chip + label + right-aligned value
   const statRows = items
     .map((item, index) => {
       const y = CARD_PADDING_TOP + index * lineHeight;
-      const delay = (index + 1) * 150;
+      const delay = 100 + index * 120;
       const staggerStyle = disableAnimations ? '' : `animation-delay: ${String(delay)}ms;`;
 
       return `
       <g transform="translate(25, ${String(y)})">
         <g class="stagger" style="${staggerStyle}">
-          <g transform="translate(0, 0)">
+          <rect x="0" y="-4" width="24" height="24" rx="7"
+            fill="${theme.icon}" fill-opacity="0.08"
+            stroke="${theme.icon}" stroke-opacity="0.16" stroke-width="1" />
+          <g transform="translate(4, 0)">
             ${item.icon}
           </g>
-          <text x="25" y="8"
+          <text x="36" y="8"
             class="stat-label"
             dominant-baseline="central"
             fill="${theme.text}">
-            ${escapeXml(item.label)}:
+            ${escapeXml(item.label)}
           </text>
-          <text x="${options.hideRank ? '220' : '190'}" y="8"
+          <text x="${options.hideRank ? '220' : '196'}" y="8"
             class="stat-value"
             dominant-baseline="central"
-            fill="${theme.text}"
+            fill="${theme.title}"
             text-anchor="end">
             ${escapeXml(item.value)}
           </text>

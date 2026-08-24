@@ -12,7 +12,6 @@ import { sanitizeUserError } from '../common/errors.js';
 import { parseCommaSeparated } from '../common/utils.js';
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import type { SupportedLocale } from '../types/index.js';
 
 /**
  * Top Languages route plugin for Fastify.
@@ -56,7 +55,7 @@ export function topLangsRoute(server: FastifyInstance): void {
         hideTitle: params.hide_title,
         customTitle: params.custom_title,
         disableAnimations: params.disable_animations,
-        locale: params.locale as SupportedLocale,
+        locale: params.locale,
         width: 495,
         height: 195, // The card recalculates this internally based on items
         hideProgress: false,

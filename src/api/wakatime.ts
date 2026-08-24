@@ -11,7 +11,6 @@ import { draculaBlack } from '../themes/dracula-black.js';
 import { sanitizeUserError } from '../common/errors.js';
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import type { SupportedLocale } from '../types/index.js';
 
 /**
  * Coding Stats route plugin for Fastify.
@@ -50,7 +49,7 @@ export function codingStatsRoute(server: FastifyInstance): void {
         hideTitle: params.hide_title,
         customTitle: params.custom_title,
         disableAnimations: params.disable_animations,
-        locale: params.locale as SupportedLocale,
+        locale: params.locale,
         width: 495,
         height: 0,
         langsCount: params.langs_count,

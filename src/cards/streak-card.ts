@@ -73,7 +73,7 @@ export function renderStreakCard(stats: StreakStats, options: StreakCardOptions)
 
   const addDivider = (x: number): void => {
     columns.push(`
-      <line x1="${String(x)}" y1="15" x2="${String(x)}" y2="135" stroke="${theme.border}" stroke-width="1" opacity="0.6" />
+      <line x1="${String(x)}" y1="15" x2="${String(x)}" y2="135" stroke="url(#streak-divider)" stroke-width="1" />
     `);
   };
 
@@ -103,46 +103,63 @@ export function renderStreakCard(stats: StreakStats, options: StreakCardOptions)
     const dash = C - gap;
     const offset = -gap / 2;
 
+    const glowPulse = disableAnimations
+      ? ''
+      : `<animate attributeName="stroke-opacity" values="0.25;0.55;0.25" dur="3s" repeatCount="indefinite" />`;
+
     const ringSvg = isCenter
       ? `
+      <!-- Glow halo behind the ring -->
+      <circle cx="0" cy="55" r="${String(R)}" fill="none" stroke="${iconColor}" stroke-width="9" stroke-opacity="0.3" stroke-linecap="round" stroke-dasharray="${String(dash)} ${String(gap)}" stroke-dashoffset="${String(offset)}" transform="rotate(-90 0 55)" filter="url(#streak-glow)">
+        ${glowPulse}
+      </circle>
       <!-- Prominent Ring -->
-      <circle cx="0" cy="55" r="${String(R)}" fill="none" stroke="${theme.icon}" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="${String(dash)} ${String(gap)}" stroke-dashoffset="${String(offset)}" transform="rotate(-90 0 55)" opacity="0.8" />
+      <circle cx="0" cy="55" r="${String(R)}" fill="none" stroke="url(#streak-ring-grad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="${String(dash)} ${String(gap)}" stroke-dashoffset="${String(offset)}" transform="rotate(-90 0 55)" />
     `
       : '';
+
+    // Soft halo chip behind side-column icons for visual consistency
+    const iconHalo = isCenter
+      ? ''
+      : `<circle cx="0" cy="${String(iconY + 12)}" r="17" fill="${iconColor}" fill-opacity="0.08" stroke="${iconColor}" stroke-opacity="0.15" stroke-width="1" />`;
 
     return `
       <g transform="translate(${String(cx)}, 10)">
         <g class="stagger" style="${stagger}">
           ${ringSvg}
-          
+          ${iconHalo}
+
           <!-- Icon -->
           <g transform="translate(-12, ${String(iconY)}) scale(1.5)">
             ${iconSvg}
           </g>
-          
+
           <!-- Value -->
           <text x="0" y="${String(valueY)}"
             text-anchor="middle"
-            fill="${theme.text}"
-            font-size="34" font-weight="700"
+            fill="${theme.title}"
+            font-size="34" font-weight="800"
+            letter-spacing="-0.5"
+            style="font-variant-numeric: tabular-nums;"
             font-family="${FONT_FAMILY}">
             ${escapeXml(value)}
           </text>
-          
+
           <!-- Label -->
           <text x="0" y="${String(labelY)}"
             text-anchor="middle"
             fill="${iconColor}"
-            font-size="14" font-weight="600"
+            font-size="11" font-weight="700"
+            letter-spacing="1.6"
             font-family="${FONT_FAMILY}">
-            ${escapeXml(label)}
+            ${escapeXml(label.toUpperCase())}
           </text>
-          
+
           <!-- Date Range -->
           <text x="0" y="${String(dateY)}"
             text-anchor="middle"
             fill="${theme.muted}"
-            font-size="12" font-weight="400"
+            font-size="11.5" font-weight="400"
             font-family="${FONT_FAMILY}">
             ${escapeXml(dateRange)}
           </text>
@@ -195,6 +212,21 @@ export function renderStreakCard(stats: StreakStats, options: StreakCardOptions)
   }
 
   const body = `
+    <defs>
+      <linearGradient id="streak-ring-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="${theme.orange}" />
+        <stop offset="100%" stop-color="${theme.pink}" />
+      </linearGradient>
+      <linearGradient id="streak-divider" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="${theme.border}" stop-opacity="0" />
+        <stop offset="35%" stop-color="${theme.border}" stop-opacity="0.55" />
+        <stop offset="65%" stop-color="${theme.border}" stop-opacity="0.55" />
+        <stop offset="100%" stop-color="${theme.border}" stop-opacity="0" />
+      </linearGradient>
+      <filter id="streak-glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="5" />
+      </filter>
+    </defs>
     ${columns.join('')}
   `;
 

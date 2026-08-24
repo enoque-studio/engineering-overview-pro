@@ -5,10 +5,10 @@
 <h1 align="center">engineering-overview-pro</h1>
 
 <p align="center">
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/actions/workflows/ci.yml"><img src="https://github.com/esousa-dev/engineering-overview-pro/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/commits/main/"><img src="https://img.shields.io/github/last-commit/esousa-dev/engineering-overview-pro?logo=github&amp;label=last%20commit" alt="Last commit" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/esousa-dev/engineering-overview-pro?label=commits%2Fmonth&amp;logo=github" alt="Commit activity" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/blob/main/LICENSE"><img src="https://img.shields.io/github/license/esousa-dev/engineering-overview-pro?color=blue&amp;label=license" alt="License" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/actions/workflows/ci.yml"><img src="https://github.com/enoque-studio/engineering-overview-pro/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/commits/main/"><img src="https://img.shields.io/github/last-commit/enoque-studio/engineering-overview-pro?logo=github&amp;label=last%20commit" alt="Last commit" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/enoque-studio/engineering-overview-pro?label=commits%2Fmonth&amp;logo=github" alt="Commit activity" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/blob/main/LICENSE"><img src="https://img.shields.io/github/license/enoque-studio/engineering-overview-pro?color=blue&amp;label=license" alt="License" /></a>
 </p>
 
 <p align="center">
@@ -24,33 +24,33 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/blob/main/.github/dependabot.yml"><img src="https://img.shields.io/badge/Dependabot-enabled-025e8c?logo=dependabot&amp;logoColor=white" alt="Dependabot" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/npm_audit-passing-brightgreen?logo=npm&amp;logoColor=white" alt="npm audit passing" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/blob/main/package.json"><img src="https://img.shields.io/github/package-json/dependency-version/esousa-dev/engineering-overview-pro/dev/typescript?branch=main&amp;label=typescript%20%28dev%29" alt="TypeScript devDependency version" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/actions/workflows/release.yml"><img src="https://img.shields.io/badge/npm_publish-optional-CB3837?logo=npm&amp;logoColor=white" alt="npm publish optional" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/blob/main/.github/dependabot.yml"><img src="https://img.shields.io/badge/Dependabot-enabled-025e8c?logo=dependabot&amp;logoColor=white" alt="Dependabot" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/npm_audit-passing-brightgreen?logo=npm&amp;logoColor=white" alt="npm audit passing" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/blob/main/package.json"><img src="https://img.shields.io/github/package-json/dependency-version/enoque-studio/engineering-overview-pro/dev/typescript?branch=main&amp;label=typescript%20%28dev%29" alt="TypeScript devDependency version" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/actions/workflows/release.yml"><img src="https://img.shields.io/badge/npm_publish-optional-CB3837?logo=npm&amp;logoColor=white" alt="npm publish optional" /></a>
 </p>
 
 <p align="center">
-  <a href="https://www.codefactor.io/repository/github/esousa-dev/engineering-overview-pro"><img src="https://www.codefactor.io/repository/github/esousa-dev/engineering-overview-pro/badge/main" alt="CodeFactor" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/pulse"><img src="https://img.shields.io/github/issues/esousa-dev/engineering-overview-pro?logo=github&amp;label=issues" alt="GitHub issues" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro/pulls"><img src="https://img.shields.io/github/issues-pr/esousa-dev/engineering-overview-pro?logo=github&amp;label=pull%20requests" alt="GitHub pull requests" /></a>
-  <a href="https://github.com/esousa-dev/engineering-overview-pro"><img src="https://img.shields.io/github/stars/esousa-dev/engineering-overview-pro?style=social" alt="GitHub stars" /></a>
+  <a href="https://www.codefactor.io/repository/github/enoque-studio/engineering-overview-pro"><img src="https://www.codefactor.io/repository/github/enoque-studio/engineering-overview-pro/badge/main" alt="CodeFactor" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/pulse"><img src="https://img.shields.io/github/issues/enoque-studio/engineering-overview-pro?logo=github&amp;label=issues" alt="GitHub issues" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro/pulls"><img src="https://img.shields.io/github/issues-pr/enoque-studio/engineering-overview-pro?logo=github&amp;label=pull%20requests" alt="GitHub pull requests" /></a>
+  <a href="https://github.com/enoque-studio/engineering-overview-pro"><img src="https://img.shields.io/github/stars/enoque-studio/engineering-overview-pro?style=social" alt="GitHub stars" /></a>
 </p>
 
 ---
 
 A free, public **SVG card service** for GitHub profiles. Embed dynamic stats, language breakdowns, contribution streaks, activity heatmaps, pinned repositories, DevOps signals, and coding activity directly in your README — no sign-up, no install, just a URL.
 
-> 🌐 **Live at [`https://esousa97.com`](https://esousa97.com)** — open and free for community use. Built with **Node.js**, **Fastify**, and **TypeScript**. MIT-licensed; you can also self-host.
+Built with **Node.js**, **Fastify**, and **TypeScript**. MIT-licensed and ready to self-host.
 
-**Maintainer:** [ESousa97](https://github.com/ESousa97)
+**Maintainer:** [Enoque Sousa](https://github.com/enoquesousa)
 
 ## Quickstart — embed a card in 1 line
 
 Drop this into your `README.md`, replacing `YOUR_LOGIN` with your GitHub username:
 
 ```markdown
-![](https://esousa97.com/api/stats?username=YOUR_LOGIN)
+![](https://your-domain.example/api/stats?username=YOUR_LOGIN)
 ```
 
 That's it. The service fetches your public GitHub data and returns an SVG, which any markdown-aware renderer (GitHub, GitLab, dashboards, blog posts) embeds inline.
@@ -58,10 +58,10 @@ That's it. The service fetches your public GitHub data and returns an SVG, which
 ### A profile-ready combo
 
 ```markdown
-![Stats](https://esousa97.com/api/stats?username=YOUR_LOGIN)
-![Top languages](https://esousa97.com/api/top-langs?username=YOUR_LOGIN&layout=donut)
-![Streak](https://esousa97.com/api/streak?username=YOUR_LOGIN)
-![Activity](https://esousa97.com/api/activity?username=YOUR_LOGIN)
+![Stats](https://your-domain.example/api/stats?username=YOUR_LOGIN)
+![Top languages](https://your-domain.example/api/top-langs?username=YOUR_LOGIN&layout=donut)
+![Streak](https://your-domain.example/api/streak?username=YOUR_LOGIN)
+![Activity](https://your-domain.example/api/activity?username=YOUR_LOGIN)
 ```
 
 ## Available cards
@@ -169,16 +169,16 @@ Uses only the shared parameters above.
 
 ```markdown
 <!-- Pro Dark with custom title -->
-![](https://esousa97.com/api/stats?username=YOUR_LOGIN&theme=pro-dark&custom_title=My%20GitHub%20Stats)
+![](https://your-domain.example/api/stats?username=YOUR_LOGIN&theme=pro-dark&custom_title=My%20GitHub%20Stats)
 
 <!-- Donut top-langs in pt-br -->
-![](https://esousa97.com/api/top-langs?username=YOUR_LOGIN&layout=donut&locale=pt-br)
+![](https://your-domain.example/api/top-langs?username=YOUR_LOGIN&layout=donut&locale=pt-br)
 
 <!-- Single pinned repo -->
-![](https://esousa97.com/api/pin?username=YOUR_LOGIN&repo=engineering-overview-pro)
+![](https://your-domain.example/api/pin?username=YOUR_LOGIN&repo=engineering-overview-pro)
 
 <!-- GitHub-dark color override -->
-![](https://esousa97.com/api/stats?username=YOUR_LOGIN&bg_color=0d1117&text_color=c9d1d9&title_color=58a6ff&border_color=30363d)
+![](https://your-domain.example/api/stats?username=YOUR_LOGIN&bg_color=0d1117&text_color=c9d1d9&title_color=58a6ff&border_color=30363d)
 ```
 
 ## Rate limits & fair use
@@ -199,7 +199,7 @@ The application is a standard Node.js service — no Docker required, though you
 ### Run locally
 
 ```bash
-git clone https://github.com/esousa-dev/engineering-overview-pro.git
+git clone https://github.com/enoque-studio/engineering-overview-pro.git
 cd engineering-overview-pro
 npm install
 cp .env.example .env
@@ -228,7 +228,7 @@ Use **systemd**, **pm2**, or any process supervisor for restarts and logs. Put a
 | `HOST` | No | Bind address (default `0.0.0.0`) |
 | `LOG_LEVEL` | No | Fastify logger level: `info`, `warn`, `error`, `debug` (default `info`) |
 | `TRUST_PROXY` | No | `true`, `false`, or comma-separated allow-list. **Only enable behind a trusted proxy** — otherwise clients can spoof `X-Forwarded-For` and bypass rate limiting. Default `false`. |
-| `WARM_USERNAMES` | No | Comma-separated GitHub usernames to pre-warm in the background (e.g. `ESousa97`). The service silently refreshes their data before the cache expires, eliminating cold-start latency for every card embed. |
+| `WARM_USERNAMES` | No | Comma-separated GitHub usernames to pre-warm in the background. The service silently refreshes their data before the cache expires, eliminating cold-start latency for every card embed. |
 | `WARM_INTERVAL_MS` | No | How often the background warmer runs in milliseconds. Default `60000` (1 minute). Floor is `30000` (30 s). Warming only fires when the cache has actually expired, so at normal TTLs the warmer makes ≈ 6 GitHub calls per endpoint per day. |
 
 There is **no** default username; every card URL must include `?username=`.
@@ -290,12 +290,12 @@ MIT — see [LICENSE](LICENSE).
 **Enoque Sousa**
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/enoque-sousa-bb89aa168/)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/ESousa97)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/enoquesousa)
 [![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=flat&logo=target&logoColor=white)](https://enoquesousa.vercel.app)
 
 **[⬆ Back to top](#engineering-overview-pro)**
 
-Made with ❤️ by [Enoque Sousa](https://github.com/ESousa97)
+Made with ❤️ by [Enoque Sousa](https://github.com/enoquesousa)
 
 **Project status:** Public service — open for community use
 

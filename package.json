@@ -26,16 +26,16 @@
     "cards",
     "profile"
   ],
-  "author": "Esousa97",
+  "author": "Enoque Sousa",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Esousa97/engineering-overview-pro.git"
+    "url": "https://github.com/enoque-studio/engineering-overview-pro.git"
   },
   "bugs": {
-    "url": "https://github.com/Esousa97/engineering-overview-pro/issues"
+    "url": "https://github.com/enoque-studio/engineering-overview-pro/issues"
   },
-  "homepage": "https://github.com/Esousa97/engineering-overview-pro#readme",
+  "homepage": "https://github.com/enoque-studio/engineering-overview-pro#readme",
   "files": [
     "dist",
     "README.md",

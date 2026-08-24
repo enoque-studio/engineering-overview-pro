@@ -14,7 +14,7 @@ const SHARED_PARAMS = {
     required: true,
     type: 'string',
     description: 'GitHub username (1–39 chars, alphanumeric + hyphens)',
-    example: 'ESousa97',
+    example: 'enoquesousa',
   },
   theme: {
     required: false,
@@ -106,7 +106,7 @@ const ENDPOINT_CATALOG = [
     path: '/api/stats',
     method: 'GET',
     description: 'GitHub contribution stats card (commits, PRs, issues, stars, rank)',
-    example: '/api/stats?username=ESousa97',
+    example: '/api/stats?username=enoquesousa',
     extra_params: {
       include_private: {
         required: false,
@@ -159,7 +159,7 @@ const ENDPOINT_CATALOG = [
     path: '/api/top-langs',
     method: 'GET',
     description: 'Most used programming languages across all public repositories',
-    example: '/api/top-langs?username=ESousa97&layout=donut',
+    example: '/api/top-langs?username=enoquesousa&layout=donut',
     extra_params: {
       langs_count: {
         required: false,
@@ -213,7 +213,7 @@ const ENDPOINT_CATALOG = [
     path: '/api/streak',
     method: 'GET',
     description: 'Contribution streak card (current streak, longest streak, total contributions)',
-    example: '/api/streak?username=ESousa97',
+    example: '/api/streak?username=enoquesousa',
     extra_params: {
       hide_current_streak: {
         required: false,
@@ -241,7 +241,7 @@ const ENDPOINT_CATALOG = [
     method: 'GET',
     description:
       'Contribution heatmap + radar chart (commits, PRs, reviews, issues, repos, languages)',
-    example: '/api/activity?username=ESousa97',
+    example: '/api/activity?username=enoquesousa',
     extra_params: {},
   },
   {
@@ -249,7 +249,7 @@ const ENDPOINT_CATALOG = [
     method: 'GET',
     description:
       'Pinned repository card. Omit `repo` to show a grid of all pinned repos; include `repo` for a single repo card.',
-    example: '/api/pin?username=ESousa97&repo=engineering-overview-pro',
+    example: '/api/pin?username=enoquesousa&repo=engineering-overview-pro',
     extra_params: {
       repo: {
         required: false,
@@ -276,7 +276,7 @@ const ENDPOINT_CATALOG = [
     method: 'GET',
     description:
       'DevOps health card (CI/CD score, security score, repo organisation grade via GitHub Actions + CodeFactor)',
-    example: '/api/devops?username=ESousa97',
+    example: '/api/devops?username=enoquesousa',
     extra_params: {},
   },
   {
@@ -284,7 +284,7 @@ const ENDPOINT_CATALOG = [
     method: 'GET',
     description:
       'Estimated coding time card derived from recent GitHub public events (no external service required)',
-    example: '/api/coding-stats?username=ESousa97',
+    example: '/api/coding-stats?username=enoquesousa',
     extra_params: {
       langs_count: {
         required: false,

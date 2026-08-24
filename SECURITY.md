@@ -10,7 +10,7 @@ Please **do not** open a public GitHub issue for undisclosed security problems.
 
 Instead, contact the maintainer privately:
 
-- **GitHub:** [Esousa97](https://github.com/Esousa97) — use **Security advisories** on this repository if the feature is enabled, or open a draft security advisory as described in [GitHub’s documentation](https://docs.github.com/en/code-security/security-advisories).
+- **GitHub:** [Enoque Sousa](https://github.com/enoquesousa) — use **Security advisories** on this repository if the feature is enabled, or open a draft security advisory as described in [GitHub’s documentation](https://docs.github.com/en/code-security/security-advisories).
 
 Include:
 

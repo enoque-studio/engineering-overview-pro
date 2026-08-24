@@ -4,7 +4,7 @@
   role="img"
   aria-labelledby="card-title card-desc">
   <title id="card-title">GitHub Stats</title>
-  <desc id="card-desc">ESousa97&apos;s GitHub Stats</desc>
+  <desc id="card-desc">enoquesousa&apos;s GitHub Stats</desc>
   <defs>
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
       <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#000000" flood-opacity="0.15" />

@@ -228,7 +228,7 @@ Use **systemd**, **pm2**, or any process supervisor for restarts and logs. Put a
 | `HOST` | No | Bind address (default `0.0.0.0`) |
 | `LOG_LEVEL` | No | Fastify logger level: `info`, `warn`, `error`, `debug` (default `info`) |
 | `TRUST_PROXY` | No | `true`, `false`, or comma-separated allow-list. **Only enable behind a trusted proxy** — otherwise clients can spoof `X-Forwarded-For` and bypass rate limiting. Default `false`. |
-| `WARM_USERNAMES` | No | Comma-separated GitHub usernames to pre-warm in the background (e.g. `octocat`). The service silently refreshes their data before the cache expires, eliminating cold-start latency for every card embed. |
+| `WARM_USERNAMES` | No | Comma-separated GitHub usernames to pre-warm in the background. The service silently refreshes their data before the cache expires, eliminating cold-start latency for every card embed. |
 | `WARM_INTERVAL_MS` | No | How often the background warmer runs in milliseconds. Default `60000` (1 minute). Floor is `30000` (30 s). Warming only fires when the cache has actually expired, so at normal TTLs the warmer makes ≈ 6 GitHub calls per endpoint per day. |
 
 There is **no** default username; every card URL must include `?username=`.

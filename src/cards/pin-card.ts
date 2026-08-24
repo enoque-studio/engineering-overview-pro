@@ -1,4 +1,4 @@
-import { renderBaseCard, FONT_FAMILY } from '../common/card.js';
+import { FONT_FAMILY } from '../common/card.js';
 import { escapeXml, formatNumber, wrapText } from '../common/utils.js';
 import { iconStar, iconFork, iconRepo, iconArchive } from '../common/icons.js';
 import type { PinData, CardOptions } from '../types/index.js';
@@ -103,14 +103,19 @@ function renderCardBody(data: PinData, options: PinCardOptions, isStandalone = f
     <!-- Language glow -->
     <rect x="0" y="0" width="${String(width)}" height="${String(height)}" rx="${String(br)}" fill="url(#glow-${uniqueId})" />
     <!-- Border -->
-    <rect x="0" y="0" width="${String(width)}" height="${String(height)}" rx="${String(br)}" fill="none" stroke="url(#border-${uniqueId})" stroke-width="1.5" />
+    <rect x="0" y="0" width="${String(width)}" height="${String(height)}" rx="${String(br)}" fill="none" stroke="url(#border-${uniqueId})" stroke-width="1" />
+    <!-- Top edge highlight -->
+    <rect x="1" y="1" width="${String(width - 2)}" height="1" rx="0.5" fill="#ffffff" opacity="0.06" />
 
     <!-- Content -->
     <g transform="translate(26, 24)">
       <!-- Header -->
       <g>
-        <g transform="translate(0, 0)">${repoIcon}</g>
-        <text x="26" y="8" dominant-baseline="central">
+        <rect x="-5" y="-4" width="26" height="26" rx="8"
+          fill="${accentColor}" fill-opacity="0.09"
+          stroke="${accentColor}" stroke-opacity="0.18" stroke-width="1" />
+        <g transform="translate(0, 1)">${repoIcon}</g>
+        <text x="30" y="9" dominant-baseline="central">
           <tspan class="repo-owner">${escapeXml(ownerSlash)}</tspan>
           <tspan class="repo-name" dx="4">${escapeXml(repoName)}</tspan>
         </text>
@@ -207,8 +212,8 @@ export function renderPinnedCards(repos: PinData[], options: PinCardOptions): st
   </defs>
 
   <style>
-    .header-title { font-family: ${FONT_FAMILY}; font-size: 14px; font-weight: 700; fill: ${theme.title}; letter-spacing: 0.08em; text-transform: uppercase; }
-    .header-count { font-family: ${FONT_FAMILY}; font-size: 11px; font-weight: 400; fill: ${theme.muted}; }
+    .header-title { font-family: ${FONT_FAMILY}; font-size: 12.5px; font-weight: 700; fill: ${theme.title}; letter-spacing: 0.18em; text-transform: uppercase; }
+    .header-count { font-family: ${FONT_FAMILY}; font-size: 10.5px; font-weight: 400; fill: ${theme.muted}; letter-spacing: 0.02em; }
     .repo-name { font-family: ${FONT_FAMILY}; font-size: 17px; font-weight: 700; fill: ${theme.title}; letter-spacing: -0.2px; }
     .repo-owner { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 400; fill: ${theme.muted}; letter-spacing: -0.2px; }
     .repo-desc { font-family: ${FONT_FAMILY}; font-size: 13px; fill: ${theme.text}; opacity: 0.85; line-height: 1.6; letter-spacing: -0.2px; }
@@ -216,10 +221,14 @@ export function renderPinnedCards(repos: PinData[], options: PinCardOptions): st
     .lang-text { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 500; fill: ${theme.text}; letter-spacing: -0.2px; }
     .badge-text { font-family: ${FONT_FAMILY}; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 
-    .card-enter { opacity: 0; animation: cardSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-    @keyframes cardSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .header-line { animation: lineGrow 1s cubic-bezier(0.22, 1, 0.36, 1) forwards; transform-origin: center; }
+    .card-enter { opacity: 0; animation: cardSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes cardSlideIn { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .header-line { animation: lineGrow 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards; transform-origin: center; }
     @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) {
+      .card-enter { opacity: 1; animation: none; }
+      .header-line { animation: none; transform: scaleX(1); }
+    }
 
     ${
       disableAnimations
@@ -249,33 +258,50 @@ export function renderPinnedCards(repos: PinData[], options: PinCardOptions): st
 
 /**
  * Render individual repository pin card SVG.
+ * Standalone root — the body already draws its own card surface,
+ * so it is not wrapped in renderBaseCard (avoids a doubled frame).
  */
 export function renderPinCard(data: PinData, options: PinCardOptions): string {
-  const { theme } = options;
+  const { theme, disableAnimations } = options;
+  const width = SINGLE_CARD_WIDTH;
+  const height = SINGLE_CARD_HEIGHT;
 
-  const body = `
-    <defs>
-      <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="112%">
-        <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(0,0,0,0.25)" />
-      </filter>
-    </defs>
+  return `
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="${String(width)}"
+  height="${String(height)}"
+  viewBox="0 0 ${String(width)} ${String(height)}"
+  role="img"
+  aria-labelledby="pin-title pin-desc"
+>
+  <title id="pin-title">${escapeXml(`${data.owner}/${data.name}`)}</title>
+  <desc id="pin-desc">${escapeXml(data.description)}</desc>
 
-    <style>
-      .repo-name { font-family: ${FONT_FAMILY}; font-size: 17px; font-weight: 700; fill: ${theme.title}; letter-spacing: -0.2px; }
-      .repo-owner { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 400; fill: ${theme.muted}; letter-spacing: -0.2px; }
-      .repo-desc { font-family: ${FONT_FAMILY}; font-size: 13px; fill: ${theme.text}; opacity: 0.85; line-height: 1.6; letter-spacing: -0.2px; }
-      .stat-text { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 600; fill: ${theme.muted}; letter-spacing: -0.2px; }
-      .lang-text { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 500; fill: ${theme.text}; letter-spacing: -0.2px; }
-      .badge-text { font-family: ${FONT_FAMILY}; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-    </style>
+  <defs>
+    <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(0,0,0,0.25)" />
+    </filter>
+  </defs>
 
+  <style>
+    .repo-name { font-family: ${FONT_FAMILY}; font-size: 17px; font-weight: 700; fill: ${theme.title}; letter-spacing: -0.2px; }
+    .repo-owner { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 400; fill: ${theme.muted}; letter-spacing: -0.2px; }
+    .repo-desc { font-family: ${FONT_FAMILY}; font-size: 13px; fill: ${theme.text}; opacity: 0.85; line-height: 1.6; letter-spacing: -0.2px; }
+    .stat-text { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 600; fill: ${theme.muted}; letter-spacing: -0.2px; }
+    .lang-text { font-family: ${FONT_FAMILY}; font-size: 13px; font-weight: 500; fill: ${theme.text}; letter-spacing: -0.2px; }
+    .badge-text { font-family: ${FONT_FAMILY}; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card-enter { opacity: 0; animation: cardSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes cardSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    ${
+      disableAnimations
+        ? '.card-enter { opacity: 1; animation: none; }'
+        : `@media (prefers-reduced-motion: reduce) { .card-enter { opacity: 1; animation: none; } }`
+    }
+  </style>
+
+  <g class="card-enter">
     ${renderCardBody(data, options, true)}
-  `;
-
-  return renderBaseCard({
-    body,
-    options: { ...options, width: SINGLE_CARD_WIDTH, height: SINGLE_CARD_HEIGHT, hideTitle: true },
-    title: `${data.owner}/${data.name}`,
-    description: data.description,
-  });
+  </g>
+</svg>`.trim();
 }

@@ -86,7 +86,7 @@ class CacheManager {
         throw err;
       });
 
-    this.inflight.set(key, promise as Promise<unknown>);
+    this.inflight.set(key, promise);
     return promise;
   }
 

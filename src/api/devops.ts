@@ -7,7 +7,6 @@ import { draculaBlack } from '../themes/dracula-black.js';
 import { sanitizeUserError } from '../common/errors.js';
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import type { SupportedLocale } from '../types/index.js';
 
 export function devopsRoute(server: FastifyInstance, _opts: unknown, done: () => void): void {
   server.get(
@@ -47,7 +46,7 @@ export function devopsRoute(server: FastifyInstance, _opts: unknown, done: () =>
           hideTitle: params.hide_title,
           customTitle: params.custom_title,
           disableAnimations: params.disable_animations,
-          locale: params.locale as SupportedLocale,
+          locale: params.locale,
           width: 550,
           height: 195,
         });

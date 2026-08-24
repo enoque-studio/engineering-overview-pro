@@ -11,7 +11,6 @@ import { draculaBlack } from '../themes/dracula-black.js';
 import { sanitizeUserError } from '../common/errors.js';
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import type { SupportedLocale } from '../types/index.js';
 
 /**
  * Streak route plugin for Fastify.
@@ -53,7 +52,7 @@ export function streakRoute(server: FastifyInstance): void {
         hideTitle: params.hide_title,
         customTitle: params.custom_title,
         disableAnimations: params.disable_animations,
-        locale: params.locale as SupportedLocale,
+        locale: params.locale,
         width: 495,
         height: 195,
         hideCurrentStreak: params.hide_current_streak,

@@ -318,7 +318,7 @@ export async function fetchInternalCodingStats(username: string): Promise<Coding
         sessions: sessionsCount,
         activeDays: activeDaysSet.size,
         languages,
-        projects: projects.map(({ fullName: _, ...p }) => p as CodingStatsProject),
+        projects: projects.map(({ fullName: _, ...p }) => p),
       };
     },
     'coding-stats',

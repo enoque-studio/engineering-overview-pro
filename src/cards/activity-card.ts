@@ -61,7 +61,11 @@ function getRainbowFaceColors(
 }
 
 // ─── Radar Chart ─────────────────────────────────────────────────────
-function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): string {
+function renderRadarChart(
+  stats: ActivityData['stats'],
+  theme: ThemeConfig,
+  disabled: boolean,
+): string {
   const axes = ['Commit', 'Issue', 'PullReq', 'Review', 'Repo'];
   const values = [stats.commits, stats.issues, stats.pullRequests, stats.reviews, stats.repos];
 
@@ -74,6 +78,7 @@ function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): str
   const radius = (size / 2) * 0.58;
 
   const points: string[] = [];
+  const numericPoints: Array<{ x: number; y: number }> = [];
   const bgLines: string[] = [];
 
   // Logarithmic scale labels along the top axis
@@ -84,7 +89,7 @@ function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): str
     if (r > 0 && r <= radius) {
       const label = val >= 1000 ? `${String(val / 1000)}K` : String(val);
       bgLines.push(
-        `<text x="${String(centerX + 4)}" y="${String(centerY - r - 6)}" fill="${theme.muted}" font-size="15" text-anchor="start" font-family="${FONT_FAMILY}" opacity="0.6">${label}</text>`,
+        `<text x="${String(centerX + 4)}" y="${String(centerY - r - 6)}" fill="${theme.muted}" font-size="13" font-weight="500" text-anchor="start" font-family="${FONT_FAMILY}" opacity="0.55" style="font-variant-numeric: tabular-nums;">${label}</text>`,
       );
     }
   });
@@ -104,11 +109,12 @@ function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): str
     const px = centerX + r * Math.cos(angle);
     const py = centerY + r * Math.sin(angle);
     points.push(`${String(px)},${String(py)}`);
+    numericPoints.push({ x: px, y: py });
 
     const lx = centerX + (radius + 48) * Math.cos(angle);
     const ly = centerY + (radius + 32) * Math.sin(angle);
     bgLines.push(
-      `<text x="${String(lx)}" y="${String(ly)}" fill="${theme.muted}" font-size="20" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="${FONT_FAMILY}">${label}</text>`,
+      `<text x="${String(lx)}" y="${String(ly)}" fill="${theme.muted}" font-size="19" font-weight="600" letter-spacing="0.8" text-anchor="middle" dominant-baseline="middle" font-family="${FONT_FAMILY}">${label}</text>`,
     );
   });
 
@@ -125,8 +131,40 @@ function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): str
     );
   });
 
+  // Perimeter of the value polygon — used for the stroke draw-in animation
+  let perimeter = 0;
+  for (let i = 0; i < numericPoints.length; i++) {
+    const a = numericPoints[i];
+    const b = numericPoints[(i + 1) % numericPoints.length];
+    if (a && b) perimeter += Math.hypot(b.x - a.x, b.y - a.y);
+  }
+  const dashTotal = Math.ceil(perimeter) + 2;
+
+  const radarStyles = disabled
+    ? ''
+    : `
+      <style>
+        .radar-poly {
+          stroke-dasharray: ${String(dashTotal)};
+          stroke-dashoffset: ${String(dashTotal)};
+          fill-opacity: 0;
+          animation:
+            radarDraw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 500ms forwards,
+            radarFill 0.7s ease 1.3s forwards;
+        }
+        @keyframes radarDraw { to { stroke-dashoffset: 0; } }
+        @keyframes radarFill { to { fill-opacity: 1; } }
+        .radar-dot { opacity: 0; animation: radarDotIn 0.5s ease forwards; }
+        @keyframes radarDotIn { to { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) {
+          .radar-poly { animation: none; stroke-dashoffset: 0; fill-opacity: 1; }
+          .radar-dot { animation: none; opacity: 1; }
+        }
+      </style>`;
+
   return `
     <g class="radar-chart">
+      ${radarStyles}
       <defs>
         <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="${theme.purple}" stop-opacity="0.15" />
@@ -134,11 +172,17 @@ function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): str
         </radialGradient>
       </defs>
       ${bgLines.join('\n')}
-      <polygon points="${points.join(' ')}" fill="url(#radarGrad)" stroke="${theme.purple}" stroke-width="2.5" />
+      <polygon class="radar-poly" points="${points.join(' ')}" fill="url(#radarGrad)" stroke="${theme.purple}" stroke-width="2.5" stroke-linejoin="round" />
       ${points
-        .map((p) => {
+        .map((p, i) => {
           const [x, y] = p.split(',');
-          return `<circle cx="${String(x)}" cy="${String(y)}" r="5" fill="${theme.purple}" />`;
+          const dotDelay = disabled ? '' : `style="animation-delay: ${String(1100 + i * 90)}ms;"`;
+          return `
+          <g class="radar-dot" ${dotDelay}>
+            <circle cx="${String(x)}" cy="${String(y)}" r="9" fill="${theme.purple}" fill-opacity="0.25" />
+            <circle cx="${String(x)}" cy="${String(y)}" r="4.5" fill="${theme.purple}" />
+            <circle cx="${String(x)}" cy="${String(y)}" r="1.8" fill="#ffffff" fill-opacity="0.9" />
+          </g>`;
         })
         .join('')}
     </g>
@@ -146,7 +190,11 @@ function renderRadarChart(stats: ActivityData['stats'], theme: ThemeConfig): str
 }
 
 // ─── Donut Chart ─────────────────────────────────────────────────────
-function renderDonutChart(languages: ActivityData['languages'], theme: ThemeConfig): string {
+function renderDonutChart(
+  languages: ActivityData['languages'],
+  theme: ThemeConfig,
+  disabled: boolean,
+): string {
   const centerX = 150;
   const centerY = 150;
   const outerRadius = 130;
@@ -157,7 +205,7 @@ function renderDonutChart(languages: ActivityData['languages'], theme: ThemeConf
   const uid = Math.random().toString(36).slice(2, 7);
 
   // Gap between segments (radians) — creates the separated look
-  const gapAngle = languages.length > 1 ? 0.02 : 0;
+  const gapAngle = languages.length > 1 ? 0.035 : 0;
 
   const defs = `
     <defs>
@@ -230,23 +278,73 @@ function renderDonutChart(languages: ActivityData['languages'], theme: ThemeConf
   const legend: string[] = [];
   languages.forEach((lang, i) => {
     const y = legendStartY + i * rowHeight + rowHeight / 2;
+    const itemDelay = disabled ? '' : `style="animation-delay: ${String(950 + i * 80)}ms;"`;
 
     legend.push(`
       <g transform="translate(${String(legendX)}, ${String(y)})">
-        <rect y="-5" width="10" height="10" rx="2" fill="${lang.color}" />
-        <text x="16" y="0"
-          dominant-baseline="central"
-          fill="${theme.text}" font-size="${String(fontSize)}" font-weight="400"
-          font-family="${FONT_FAMILY}"
-          shape-rendering="crispEdges">${escapeXml(lang.name)}</text>
+        <g class="legend-item" ${itemDelay}>
+          <rect y="-5" width="10" height="10" rx="3" fill="${lang.color}" />
+          <text x="18" y="0"
+            dominant-baseline="central"
+            fill="${theme.text}" font-size="${String(fontSize)}" font-weight="500"
+            font-family="${FONT_FAMILY}">${escapeXml(lang.name)}<tspan dx="8" fill="${theme.muted}" font-size="${String(fontSize - 2)}" font-weight="600" style="font-variant-numeric: tabular-nums;">${lang.percentage.toFixed(1)}%</tspan></text>
+        </g>
       </g>
     `);
   });
 
+  // ── Center label — dominant language share ──
+  const topLang = languages[0];
+  const centerLabel = topLang
+    ? `
+      <g class="donut-center">
+        <text x="${String(centerX)}" y="${String(centerY - 6)}"
+          text-anchor="middle" dominant-baseline="central"
+          fill="${theme.title}" font-size="32" font-weight="800"
+          letter-spacing="-0.5" style="font-variant-numeric: tabular-nums;"
+          font-family="${FONT_FAMILY}">${String(Math.round(topLang.percentage))}%</text>
+        <text x="${String(centerX)}" y="${String(centerY + 20)}"
+          text-anchor="middle" dominant-baseline="central"
+          fill="${theme.muted}" font-size="10" font-weight="600"
+          letter-spacing="1.6"
+          font-family="${FONT_FAMILY}">${escapeXml(topLang.name.toUpperCase())}</text>
+      </g>`
+    : '';
+
+  const donutStyles = disabled
+    ? ''
+    : `
+      <style>
+        .donut-spin {
+          opacity: 0;
+          transform-box: fill-box;
+          transform-origin: 50% 50%;
+          animation: donutIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 600ms forwards;
+        }
+        @keyframes donutIn {
+          from { opacity: 0; transform: rotate(-50deg) scale(0.9); }
+          to { opacity: 1; transform: rotate(0deg) scale(1); }
+        }
+        .donut-center { opacity: 0; animation: donutFade 0.7s ease 1250ms forwards; }
+        .legend-item { opacity: 0; animation: legendIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes legendIn {
+          from { opacity: 0; transform: translateX(-10px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes donutFade { to { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) {
+          .donut-spin, .donut-center, .legend-item { animation: none; opacity: 1; transform: none; }
+        }
+      </style>`;
+
   return `
     <g class="donut-chart">
+      ${donutStyles}
       ${defs}
-      ${layers.join('\n')}
+      <g class="donut-spin">
+        ${layers.join('\n')}
+      </g>
+      ${centerLabel}
       ${legend.join('\n')}
     </g>
   `;
@@ -346,8 +444,8 @@ export function renderActivityCard(data: ActivityData, options: ActivityCardOpti
   });
 
   // ── Subcomponents ──
-  const radar = renderRadarChart(data.stats, theme);
-  const donut = renderDonutChart(data.languages, theme);
+  const radar = renderRadarChart(data.stats, theme, disableAnimations);
+  const donut = renderDonutChart(data.languages, theme, disableAnimations);
 
   // ── Date range ──
   const weeks = data.weeks;
@@ -370,12 +468,16 @@ export function renderActivityCard(data: ActivityData, options: ActivityCardOpti
 
   const body = `
     <style>
-      @keyframes popUp { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
-      .block-anim { animation: popUp 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) backwards; }
+      @keyframes popUp { 0% { opacity: 0; transform: translateY(16px); } 100% { opacity: 1; transform: translateY(0); } }
+      .block-anim { animation: popUp 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.18) backwards; }
       .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
       @keyframes fadeIn { to { opacity: 1; } }
-      .rainbow-icon { animation: rainbow 5s linear infinite; }
+      .rainbow-icon { animation: rainbow 8s linear infinite; }
       @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .block-anim, .fade-in { animation: none; opacity: 1; }
+        .rainbow-icon { animation: none; }
+      }
     </style>
 
     <!-- ═══════════════════════════════════════════════════════════════
@@ -390,7 +492,9 @@ export function renderActivityCard(data: ActivityData, options: ActivityCardOpti
          ═══════════════════════════════════════════════════════════════ -->
 
     <!-- Date range (upper-right) -->
-    <text x="${String(cardWidth - 35)}" y="40" fill="${theme.muted}" font-size="14" text-anchor="end" font-family="${FONT_FAMILY}" opacity="0.7">${escapeXml(dateRange)}</text>
+    <g ${disableAnimations ? '' : 'class="fade-in" style="animation-delay: 300ms;"'}>
+      <text x="${String(cardWidth - 35)}" y="40" fill="${theme.muted}" font-size="12" font-weight="600" letter-spacing="1.4" text-anchor="end" font-family="${FONT_FAMILY}" opacity="0.75">${escapeXml(dateRange)}</text>
+    </g>
 
     <!-- Radar Chart (upper-right, overlapping heatmap blocks) -->
     <g transform="translate(${String(radarX)}, ${String(radarY)})">
@@ -404,19 +508,21 @@ export function renderActivityCard(data: ActivityData, options: ActivityCardOpti
 
     <!-- Footer: Summary Stats (centered bottom, on top of everything) -->
     <g transform="translate(${String(footerX)}, ${String(footerY)})">
-      <text x="0" y="32" fill="${theme.yellow}" font-size="44" font-weight="600" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
-        ${formatNumber(data.totalContributions)}
-        <tspan fill="${theme.text}" font-size="26" font-weight="400"> ${escapeXml(t('stats.contribs', locale))}</tspan>
-      </text>
+      <g ${disableAnimations ? '' : 'class="fade-in" style="animation-delay: 1350ms;"'}>
+        <text x="0" y="32" fill="${theme.yellow}" font-size="44" font-weight="700" letter-spacing="-1" style="font-variant-numeric: tabular-nums;" font-family="${FONT_FAMILY}">
+          ${formatNumber(data.totalContributions)}
+          <tspan fill="${theme.text}" font-size="24" font-weight="400" letter-spacing="0"> ${escapeXml(t('stats.contribs', locale))}</tspan>
+        </text>
 
-      <g transform="translate(290, 8)">
-        <g transform="translate(4, 4) scale(1.5)" class="rainbow-icon">${iconStar(theme.purple)}</g>
-        <text x="32" y="28" fill="${theme.text}" font-size="36" font-weight="400" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">${formatNumber(data.summary.totalStars)}</text>
-      </g>
+        <g transform="translate(290, 8)">
+          <g transform="translate(4, 4) scale(1.5)" class="rainbow-icon">${iconStar(theme.purple)}</g>
+          <text x="34" y="28" fill="${theme.text}" font-size="34" font-weight="500" style="font-variant-numeric: tabular-nums;" font-family="${FONT_FAMILY}">${formatNumber(data.summary.totalStars)}</text>
+        </g>
 
-      <g transform="translate(390, 8)">
-        <g transform="translate(4, 4) scale(1.5)" class="rainbow-icon">${iconFork(theme.purple)}</g>
-        <text x="32" y="28" fill="${theme.text}" font-size="36" font-weight="400" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">${formatNumber(data.summary.totalForks)}</text>
+        <g transform="translate(392, 8)">
+          <g transform="translate(4, 4) scale(1.5)" class="rainbow-icon">${iconFork(theme.purple)}</g>
+          <text x="34" y="28" fill="${theme.text}" font-size="34" font-weight="500" style="font-variant-numeric: tabular-nums;" font-family="${FONT_FAMILY}">${formatNumber(data.summary.totalForks)}</text>
+        </g>
       </g>
     </g>
   `;

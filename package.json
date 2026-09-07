@@ -59,7 +59,7 @@
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@types/node": "^26.2.0",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.0",
     "cspell": "^10.1.0",
     "eslint": "^10.9.0",
     "graphql": "^17.0.2",
@@ -67,6 +67,6 @@
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.67.0",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.0"
   }
 }

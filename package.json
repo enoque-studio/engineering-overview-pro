@@ -48,7 +48,7 @@
     "@fastify/cors": "^11.3.0",
     "@fastify/helmet": "^13.1.1",
     "@fastify/rate-limit": "^11.2.0",
-    "@octokit/graphql": "^9.0.4",
+    "@octokit/graphql": "^9.0.5",
     "@octokit/rest": "^22.0.1",
     "date-fns": "^4.4.0",
     "fastify": "^5.12.1",
